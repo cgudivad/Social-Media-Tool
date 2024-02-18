@@ -14,23 +14,25 @@ $(document).ready(function () {
     $('#paraphrase-button').click(function () {
         load();
         paraPhraseFunction();
-        unLoad();
     });
 
     $('#post-button').click(function () {
         load();
         postFunction();
-        unLoad();
     });
 
     function load() {
+        console.log("start load");
         $('#container').addClass('blurred');
         $('.loading').show();
+        console.log("end load");
     }
 
     function unLoad() {
+        console.log("start unload");
         $('#container').removeClass('blurred');
         $('.loading').hide();
+        console.log("end unload");
     }
 
     function paraPhraseFunction() {
@@ -61,8 +63,10 @@ $(document).ready(function () {
         ]).then(function (responses) {
             $('#openaioutput').val(responses[0]['OpenAI_Response']);
             $('#geminioutput').val(responses[1]['Gemini_Response']);
+            unLoad();
         }).catch(function (err) {
             console.error('Error in paraphrase requests:', err);
+            unLoad();
         });
     }
 
@@ -117,6 +121,9 @@ $(document).ready(function () {
 
             Promise.all(postPromises).then(function (responses) {
                 showSuccessMessage(responses);
+            }).catch(function (err) {
+                console.error('Error in post requests:', err);
+                unLoad();
             });
         } else {
             showErrorMessage('Please select either Twitter or LinkedIn or both');
@@ -124,11 +131,13 @@ $(document).ready(function () {
     }
 
     function showErrorMessage(err) {
+        unLoad();
         $('#successMessage').hide();
         $('#errorMessage').text(err).show();
     }
 
     function showSuccessMessage(message) {
+        unLoad();
         $('#errorMessage').hide();
         $('#successMessage').text(message.join(', ')).show();
     }
