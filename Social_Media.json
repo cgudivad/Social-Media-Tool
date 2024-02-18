@@ -1,0 +1,445 @@
+{
+  "name": "Social Media V3",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "chat",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Paraphrase the following text"
+            },
+            {
+              "content": "={{ $json.body.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a5657502-8a31-436b-af70-40347adbbbcf",
+      "name": "OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        120
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "MqCRN0Q7oOTj33O9",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.body.text }}",
+        "additionalFields": {}
+      },
+      "id": "3152f46f-40dd-48d0-9937-eecac6316ee3",
+      "name": "X",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        960,
+        500
+      ],
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "St6icQKVsdLi9hYe",
+          "name": "X account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "2SU9iQYG6w",
+        "text": "={{ $json.body.text }}",
+        "additionalFields": {}
+      },
+      "id": "3f53b1c9-4cd2-4660-99ae-2c03133b3f7e",
+      "name": "LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        960,
+        660
+      ],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "uw63NODxgFIvxLMh",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "ParaPhrase Content",
+        "height": 361.22217623798076,
+        "width": 1003.99166049461,
+        "color": 7
+      },
+      "id": "06307b0f-7f7f-4024-a5ca-d7a7fa52fa6e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        620,
+        81
+      ]
+    },
+    {
+      "parameters": {
+        "content": "Post the Content",
+        "height": 407.41121150569074,
+        "width": 778.0061326397195,
+        "color": 7
+      },
+      "id": "3ad30911-5507-4599-b76d-b422782a02b4",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        620,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyBAK4NxUYBU2Spf3lEx_2B3KSUdFVDFynQ"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Can you paraphase the following text: {{ JSON.stringify($json[\"body\"][\"text\"]).replace(/^\"(.*)\"$/, '$1') }}\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "da0f1095-44aa-48f7-94d6-6930572e5474",
+      "name": "Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        960,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "OpenAI_Response",
+              "stringValue": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      },
+      "id": "c99c96ff-3946-455b-acc1-2c56d76aee85",
+      "name": "OpenAI Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1180,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Gemini_Response",
+              "stringValue": "={{ $json.candidates[0].content.parts[0].text }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      },
+      "id": "a707a79c-fc83-4943-a88e-fcf7e761cf51",
+      "name": "Gemini Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1180,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "openai-paraphrase",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "0a467d7e-48ed-43a7-9b91-d2cb7dc0db00",
+      "name": "openAI Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        120
+      ],
+      "webhookId": "50bd0d9d-2c94-456a-a910-207496ecc111"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d7ce24e7-fb60-413a-986c-ffa966f47fd5",
+      "name": "Respond to openAI Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gemini-paraphrase",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "c7356c77-ae3b-4bbd-86fc-27f0785ad110",
+      "name": "Gemini Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        280
+      ],
+      "webhookId": "4cd33ebe-f120-4f81-a1ce-2dff1d0757ec"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "18101e8a-32e0-4fbd-ad47-22830a1084d6",
+      "name": "Respond to Gemini Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "post-twitter",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "356e0bba-b579-411b-a244-5f72551b2d34",
+      "name": "Twitter Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        500
+      ],
+      "webhookId": "8d131cd2-8e39-477b-8477-7a72d8b38061"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Successfully Posted on Twitter",
+        "options": {}
+      },
+      "id": "0ff2d605-10be-4466-9da0-77bd3792b904",
+      "name": "Respond to Twitter Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "post-linkedin",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "eec03c47-eab5-4b50-8cc9-4bb43ade68bb",
+      "name": "LinkedIn Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        660
+      ],
+      "webhookId": "f2276034-c103-4250-bf47-c94eb41a98ae"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Successfully Posted on LinkedIn",
+        "options": {}
+      },
+      "id": "57b84653-8f44-4287-8f1d-d88d2a1087e7",
+      "name": "Respond to LinkedIn Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        660
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X": {
+      "main": [
+        [
+          {
+            "node": "Respond to Twitter Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Respond to LinkedIn Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini": {
+      "main": [
+        [
+          {
+            "node": "Gemini Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to openAI Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Gemini Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "openAI Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Webhook": {
+      "main": [
+        [
+          {
+            "node": "Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twitter Webhook": {
+      "main": [
+        [
+          {
+            "node": "X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Webhook": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "43b6a888-d3b7-4259-a93b-9388e1eb5dac",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2018ed775103cb94e5d94c6616551439d7580a98b31ff6afa3eb890df585f2b8"
+  },
+  "id": "p2ad4A8rGX2TBOTS",
+  "tags": []
+}

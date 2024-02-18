@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Tools</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="static/js/script.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <label for="textInput">Input Content &nbsp;<img src="https://www.svgrepo.com/show/325304/input-field.svg"
+                width="24" height="24"></label>
+        <textarea id="textInput" placeholder="Enter Content here"></textarea>
+        <div class="button-group">
+            <button id="paraphrase-button">Paraphrase</button>
+        </div>
+        <br>
+        <div class="output-container">
+            <div class="textarea-wrapper">
+                <div>
+                    <input type="checkbox" id="openai" name="textOutput">
+                    <label for="openai">OpenAI &nbsp;<img src="https://www.svgrepo.com/show/306500/openai.svg"
+                            width="24" height="24"></label>
+                </div>
+                <textarea id="openaioutput" placeholder="Paraphrased Content"></textarea>
+            </div>
+            <div class="textarea-wrapper">
+                <div>
+                    <input type="checkbox" id="gemini" name="textOutput">
+                    <label for="gemini">Gemini &nbsp;<img
+                            src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" width="24"
+                            height="24"></label>
+                </div>
+                <textarea id="geminioutput" placeholder="Paraphrased Content"></textarea>
+            </div>
+        </div>
+        <div class="selectmedia">
+            <label>
+                <b>Post On</b>
+                <input type="checkbox" id="twitter">
+                <b>Twitter</b>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" width="24"
+                    height="24">
+            </label>
+            <label>
+                <input type="checkbox" id="linkedin">
+                <b>LinkedIn</b>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg" width="24" height="24">
+            </label>
+        </div>
+        <div class="button-group">
+            <button id="post-button">Post</button>
+        </div>
+        <div id="successMessage"></div>
+        <div id="errorMessage"></div>
+    </div>
+    <div class="loading">
+        <img src="https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca.gif" alt="Loading...">
+    </div>
+</body>
+
+</html>
